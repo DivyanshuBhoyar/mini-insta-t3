@@ -6,8 +6,8 @@ export const commentRouter = createTRPCRouter({
   createOne: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
-        body: z.string(),
+        postId: z.string().cuid(),
+        body: z.string().min(1).max(255),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -27,7 +27,7 @@ export const commentRouter = createTRPCRouter({
     }),
 
   deleteOne: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
       await ctx.prisma.comment.delete({
         where: {
@@ -42,7 +42,7 @@ export const commentRouter = createTRPCRouter({
   getByPost: protectedProcedure
     .input(
       z.object({
-        postId: z.string(),
+        postId: z.string().cuid(),
       })
     )
     .query(async ({ input, ctx }) => {

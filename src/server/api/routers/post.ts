@@ -34,7 +34,12 @@ export const postRouter = createTRPCRouter({
 
   // createPost protected mutation
   createPost: protectedProcedure
-    .input(z.object({ body: z.string(), imgUrl: z.string() }))
+    .input(
+      z.object({
+        body: z.string().min(1).max(255),
+        imgUrl: z.string().startsWith("my-projects/"),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const newPost = await ctx.prisma.post.create({
         data: {
@@ -51,7 +56,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   likePost: protectedProcedure
-    .input(z.object({ postId: z.string() }))
+    .input(z.object({ postId: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
       const like = await ctx.prisma.like.create({
         data: {
@@ -82,7 +87,7 @@ export const postRouter = createTRPCRouter({
 
   //dislikePost
   dislikePost: protectedProcedure
-    .input(z.object({ postId: z.string() }))
+    .input(z.object({ postId: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
       const like = await ctx.prisma.like.delete({
         where: {
@@ -111,7 +116,7 @@ export const postRouter = createTRPCRouter({
 
   // hasUserLikedPost
   hasUserLikedPost: protectedProcedure
-    .input(z.object({ postId: z.string() }))
+    .input(z.object({ postId: z.string().cuid() }))
     .query(async ({ input, ctx }) => {
       const like = await ctx.prisma.like.findUnique({
         where: {
@@ -129,7 +134,7 @@ export const postRouter = createTRPCRouter({
 
   // delete post
   deletePost: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
       await ctx.prisma.post.delete({
         where: {

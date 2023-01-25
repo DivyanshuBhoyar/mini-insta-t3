@@ -1,4 +1,5 @@
-import { FC, useContext } from "react";
+import type { FC } from "react";
+import { useContext } from "react";
 import { CommentForm } from "./CommentForm";
 import type { RouterOutputs } from "../utils/api";
 import PostIdContext from "../contexts/PostCtx";
@@ -18,7 +19,6 @@ export const CommentModal: FC<{ comments: CommentsType }> = ({ comments }) => {
           ✕
         </label>
         <h3 className="text-lg font-bold">Comments</h3>
-
         <CommentForm />
         {comments?.map((comment) => (
           <CommentView key={comment.id} comment={comment} />
